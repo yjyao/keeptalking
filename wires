@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+from functools import lru_cache
+from utils import coded_colors
+
+def cut(desc):
+  print(f'Cut the {desc} wire.')
+
+@lru_cache(1)
+def serial_ends_with_odd():
+  return int(input(f'Last digit of serial number: ')) % 2 != 0
+
+# @lru_cache(len(coded_colors))
+# def color_of(name):
+#   return input(f'Color of {name}: ').lower()
+
+# @lru_cache(len(coded_colors))
+# def num(name):
+#   return int(input(f'Number of {name}: '))
+
+def color_of(name):
+  if name == 'the last wire':
+    return wires[-1]
+  raise ValueError()
+
+def num(wire):
+  wire = wire.replace('wires', '').strip()
+  if not wire:
+    return len(wires)
+  return wires.count(wire)
+
+wires = [coded_colors[code] for code in input()]
+
+if num('wires') == 3:
+  if num('red wires') == 0:
+    cut('second')
+  elif color_of('the last wire') == 'white':
+    cut('last')
+  elif num('blue wires') > 1:
+    cut('last blue')
+  else:
+    cut('last')
+elif num('wires') == 4:
+  if num('red wires') > 1 and serial_ends_with_odd():
+    cut('red')
+  elif color_of('the last wire') == 'yellow' and num('red wires') == 0:
+    cut('first')
+  elif num('blue wires') == 1:
+    cut('first')
+  elif num('yellow wires') > 1:
+    cut('last')
+  else:
+    cut('second')
+elif num('wires') == 5:
+  if color_of('the last wire') == 'black' and serial_ends_with_odd():
+    cut('fourth')
+  elif num('red wires') == 1 and num('yellow wires') > 1:
+    cut('first')
+  elif num('black wire') == 0:
+    cut('second')
+  else:
+    cut('first')
+elif num('wires') == 6:
+  if num('yellow wires') and serial_ends_with_odd():
+    cut('third')
+  elif num('yellow wires') == 1 and num('white wires') > 1:
+    cut('fourth')
+  elif num('red wires') == 0:
+    cut('last')
+  else:
+    cut('fourth')
