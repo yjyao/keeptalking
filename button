@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+from collections import defaultdict
+from functools import lru_cache
+from utils import coded_colors
+from utils import num
+from utils import yesno
+
+@lru_cache(10)
+def button_says(txt):
+  return yesno(f'Button says "{txt}"')
+
+def hold():
+  countdown_keys = defaultdict(lambda: 1, {
+    'blue': 4,
+    'yellow': 5,
+  })
+  strip_color = input('Hold the button and enter the color of strip: ')
+  print('Release when the countdown timer has a {}.'
+        .format(countdown_keys[coded_colors[strip_color]]))
+
+def press():
+  print('Press and immediately release the button.')
+
+color = coded_colors[input('Color of button: ')]
+
+if color == 'blue' and button_says('Abort'):
+  hold()
+elif num('battery') > 1 and button_says('Detonate'):
+  press()
+elif color == 'white' and yesno('Bomb has a lit label CAR'):
+  hold()
+elif num('battery') > 2 and yesno('Bomb has a lit label FRK'):
+  press()
+elif color == 'yellow':
+  hold()
+elif color == 'red' and button_says('Hold'):
+  press()
+else:
+  hold()
