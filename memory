@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+
+from functools import namedtuple
+
+Button = namedtuple('Button', 'position label')
+Position = namedtuple('Position', 'value')
+Label = namedtuple('Label', 'value')
+
+Position.__str__ = (lambda self:
+                    f'{(None, "first", "second", "third", "fourth")[self.value]} position')
+
+Position.__str__ = lambda self: f'label "{self.value}"'
+
+def make_position(nth):
+  return lambda: Position(nth)
+
+def get_previous_position(stage):
+  return lambda: buttons[stage].position
+
+def get_previous_label(stage):
+  return lambda: buttons[stage].label
+
+stages = (
+  (
+    make_position(2),
+    make_position(2),
+    make_position(3),
+    make_position(4),
+  ),
+  (
+    lambda: Label(4),
+    get_previous_position(stage=0),
+    make_position(1),
+    get_previous_position(stage=0),
+  ),
+  (
+    get_previous_label(1),
+    get_previous_label(0),
+    make_position(3),
+    lambda: Label(4),
+  ),
+  (
+    get_previous_position(stage=0),
+    make_position(1),
+    get_previous_position(stage=1),
+    get_previous_position(stage=1),
+  ),
+  (
+    get_previous_label(0),
+    get_previous_label(1),
+    get_previous_label(3),
+    get_previous_label(2),
+  ),
+)
+
+def get_button(position_or_label):
+  if isinstance(position_or_label, Position):
+    position = position_or_label
+    label = Label(int(input(f'Label on the {position}: ')))
+  elif isinstance(position_or_label, Label):
+    label = position_or_label
+    position = Position(int(input(f'Position of the {label}: ')))
+  else:
+    raise ValueError()
+  return Button(position, label)
+
+buttons = []
+
+for instructions in stages:
+  display = int(input('Display number: '))
+  position_or_label = instructions[display-1]()
+  button = get_button(position_or_label)
+  buttons.append(button)
+  print(f'Press the button in the {button.position}.')
