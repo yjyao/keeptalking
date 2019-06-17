@@ -2,13 +2,10 @@
 
 from functools import lru_cache
 from utils import coded_colors
+from utils import serial_ends_with_odd
 
 def cut(desc):
   print(f'Cut the {desc} wire.')
-
-@lru_cache(1)
-def serial_ends_with_odd():
-  return int(input(f'Last digit of serial number: ')) % 2 != 0
 
 # @lru_cache(len(coded_colors))
 # def color_of(name):
