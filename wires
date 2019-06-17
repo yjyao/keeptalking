@@ -61,7 +61,7 @@ elif num('wires') == 5:
   else:
     cut('first')
 elif num('wires') == 6:
-  if num('yellow wires') and serial_ends_with_odd():
+  if num('yellow wires') == 0 and serial_ends_with_odd():
     cut('third')
   elif num('yellow wires') == 1 and num('white wires') > 1:
     cut('fourth')
