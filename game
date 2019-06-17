@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+while true; do
+  cmd="$(find . -maxdepth 1 -type f -executable ! -name "$(basename "$0")" | fzf)"
+  if [[ -z $cmd ]]; then
+    exit
+  else
+    echo -e "\033[32mOn the subject of $(basename $cmd).\033[0m"
+    "$cmd"
+  fi
+done
