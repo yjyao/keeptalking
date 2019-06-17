@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+from functools import namedtuple
+from utils import num
+from utils import serial_ends_with_odd
+from utils import has_parallel_port
+
+Wire = namedtuple('Wire', 'red blue star light')
+
+def new_wire(desc):
+  desc = desc.lower()
+  return Wire(red='r' in desc,
+              blue='b' in desc,
+              star='s' in desc,
+              light='l' in desc)
+
+def at_least_two_battaries():
+  return num('battery') >= 2
+
+def serial_ends_with_even():
+  return not serial_ends_with_odd()
+
+def delayed(value):
+  return lambda: value
+
+cut_scenarios = {
+  Wire(red=False, blue=False, star=False, light=False): delayed(True),
+  Wire(red=False, blue=False, star=False, light=True): delayed(False),
+  Wire(red=False, blue=False, star=True, light=False): delayed(True),
+  Wire(red=False, blue=False, star=True, light=True): at_least_two_battaries,
+  Wire(red=False, blue=True, star=False, light=False): serial_ends_with_even,
+  Wire(red=False, blue=True, star=False, light=True): has_parallel_port,
+  Wire(red=False, blue=True, star=True, light=False): delayed(False),
+  Wire(red=False, blue=True, star=True, light=True): has_parallel_port,
+  Wire(red=True, blue=False, star=False, light=False): serial_ends_with_even,
+  Wire(red=True, blue=False, star=False, light=True): at_least_two_battaries,
+  Wire(red=True, blue=False, star=True, light=False): delayed(True),
+  Wire(red=True, blue=False, star=True, light=True): at_least_two_battaries,
+  Wire(red=True, blue=True, star=False, light=False): serial_ends_with_even,
+  Wire(red=True, blue=True, star=False, light=True): serial_ends_with_even,
+  Wire(red=True, blue=True, star=True, light=False): has_parallel_port,
+  Wire(red=True, blue=True, star=True, light=True): delayed(False),
+}
+
+try:
+  while True:
+    desc = input('Describe wire [rbsl]: ')
+    print('{} the wire.'.format(
+      'Cut' if cut_scenarios[new_wire(desc)]() else 'Do not cut'))
+except (EOFError, KeyboardInterrupt):
+  print()
+  exit()

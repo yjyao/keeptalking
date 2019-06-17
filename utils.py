@@ -13,6 +13,9 @@ def serial_ends_with_odd():
 def yesno(prompt):
   return re.match('yes|y', input(f'{prompt} [Y/n] ').lower()) is not None
 
+def has_parallel_port():
+  return yesno(input('Bomb has a parallel port'))
+
 coded_colors = {
   'r': 'red',
   'g': 'green',
